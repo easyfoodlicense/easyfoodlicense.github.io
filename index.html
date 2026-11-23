@@ -68,6 +68,13 @@ section{padding-block:32px}
 .modal-ref{font-size:clamp(1.8rem,7vw,2.4rem);font-weight:700;letter-spacing:.04em;color:var(--primary);background:var(--primary-soft);border-radius:8px;padding:10px;font-family:ui-monospace,Menlo,Consolas,monospace}
 .modal-msg{font-size:1.1rem;line-height:1.5}
 .modal-btn{font-size:1.25rem;padding:12px 20px;width:100%}
+.busy-box{gap:14px}
+.spinner{width:72px;height:72px;margin:4px auto;border-radius:50%;border:7px solid var(--primary-soft);border-top-color:var(--primary);animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spinner{animation-duration:2.4s}}
+.busy-main{font-size:1.35rem;font-weight:600;line-height:1.4}
+.busy-alt{font-size:1.1rem;line-height:1.4;color:var(--muted)}
+.busy-note{font-size:.95rem;color:var(--muted)}
 .intro p{margin-top:10px;max-width:40em;color:var(--muted);font-size:1.05rem}
 .intro .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px;padding:0;list-style:none;counter-reset:s}
@@ -311,6 +318,15 @@ footer p{max-width:62em;margin-top:6px}
   </div>
 </div>
 
+<div id="busyModal" class="modal" hidden role="alertdialog" aria-modal="true" aria-live="assertive" aria-labelledby="busyMain">
+  <div class="modal-box busy-box">
+    <div class="spinner" aria-hidden="true"></div>
+    <p class="busy-main" id="busyMain"></p>
+    <p class="busy-alt" id="busyAlt"></p>
+    <p class="busy-note" id="busyNote"></p>
+  </div>
+</div>
+
 <footer>
   <div class="wrap">
     <div><b>Easy Food License</b> · <a href="#admin" style="color:var(--muted)">Admin</a></div>
@@ -362,7 +378,7 @@ const LIC_EN = ["Basic Registration","State Licence","Central Licence","Not sure
 const T = {
 en:{sub:"FSSAI food licence help",h1:"Get your FSSAI food licence from home",
 lead:"Upload your documents here. We apply on the government FoSCoS portal and follow up. When your licence is ready, you pay us and we send it to you on WhatsApp.",
-mTitle:"Application submitted",mRefL:"Your reference number",mMsg:"Please note it down. We will WhatsApp you on {mob} when your licence is ready.",mOk:"OK",np1:"No advance payment",np2:"Pay only after your FSSAI licence is issued.",ctaApply:"Apply now",ctaTrack:"Track application",s1:"Upload documents",s1d:"Fill the form and upload clear photos or PDFs.",s2:"We apply",s2d:"We check your documents and apply on FoSCoS.",s3:"Pay and receive",s3d:"Pay only when the licence is ready. We WhatsApp it to you.",
+mTitle:"Application submitted",mRefL:"Your reference number",mMsg:"Please note it down. We will WhatsApp you on {mob} when your licence is ready.",mOk:"OK",busy1:"Please wait, your application is being processed…",busy2:"Do not close or refresh this page.",busy3:"Uploading documents can take up to a minute on slow internet.",np1:"No advance payment",np2:"Pay only after your FSSAI licence is issued.",ctaApply:"Apply now",ctaTrack:"Track application",s1:"Upload documents",s1d:"Fill the form and upload clear photos or PDFs.",s2:"We apply",s2d:"We check your documents and apply on FoSCoS.",s3:"Pay and receive",s3d:"Pay only when the licence is ready. We WhatsApp it to you.",
 aTitle:"Apply for food licence",aSub:"Fields marked * are required.",lgDetails:"1. Your details",fName:"Owner name",fMobile:"Mobile number (WhatsApp)",fShop:"Shop / business name",fCity:"City / village",fType:"Type of food business",fLic:"Licence needed",
 lgDocs:"2. Upload documents",docHelp:"Use \"Take photo\" to click a photo with your phone camera, or \"Upload\" to choose a photo or PDF (up to 5 MB). Photos are reduced in size automatically.",required:"Required",optional:"Optional",upload:"Upload",change:"Add more",camera:"Take photo",
 fMsg:"Message (optional)",agree:"I confirm these documents are mine and allow Easy Food License to use them only for my FSSAI application.",submit:"Submit application",sending:"Uploading… please keep this page open",
@@ -393,7 +409,7 @@ sent:"Thank you for the payment, {name}. Here is your FSSAI food licence for {sh
 
 gu:{sub:"FSSAI ફૂડ લાઇસન્સ મદદ",h1:"ઘરે બેઠા FSSAI ફૂડ લાઇસન્સ મેળવો",
 lead:"અહીં તમારા દસ્તાવેજ અપલોડ કરો. અમે સરકારી FoSCoS પોર્ટલ પર અરજી કરીને ફોલો-અપ કરીએ છીએ. લાઇસન્સ તૈયાર થાય એટલે તમે ચુકવણી કરો અને અમે WhatsApp પર લાઇસન્સ મોકલીએ.",
-mTitle:"અરજી મળી ગઈ",mRefL:"તમારો રેફરન્સ નંબર",mMsg:"કૃપા કરીને નોંધી રાખો. લાઇસન્સ તૈયાર થશે ત્યારે {mob} પર WhatsApp કરીશું.",mOk:"બરાબર",np1:"કોઈ એડવાન્સ ચુકવણી નહીં",np2:"તમારું FSSAI લાઇસન્સ મળી જાય પછી જ ચુકવણી કરો.",ctaApply:"અરજી કરો",ctaTrack:"અરજીની સ્થિતિ",s1:"દસ્તાવેજ અપલોડ કરો",s1d:"ફોર્મ ભરો અને ચોખ્ખા ફોટા કે PDF અપલોડ કરો.",s2:"અમે અરજી કરીએ",s2d:"દસ્તાવેજ તપાસીને FoSCoS પર અરજી કરીએ છીએ.",s3:"ચુકવણી અને લાઇસન્સ",s3d:"લાઇસન્સ તૈયાર થાય પછી જ ચુકવણી. WhatsApp પર મોકલીએ.",
+mTitle:"અરજી મળી ગઈ",mRefL:"તમારો રેફરન્સ નંબર",mMsg:"કૃપા કરીને નોંધી રાખો. લાઇસન્સ તૈયાર થશે ત્યારે {mob} પર WhatsApp કરીશું.",mOk:"બરાબર",busy1:"કૃપા કરીને રાહ જુઓ, તમારી અરજી પ્રોસેસ થઈ રહી છે…",busy2:"આ પેજ બંધ કે રિફ્રેશ ન કરો.",busy3:"ધીમા ઇન્ટરનેટ પર દસ્તાવેજ અપલોડ થતાં એક મિનિટ લાગી શકે છે.",np1:"કોઈ એડવાન્સ ચુકવણી નહીં",np2:"તમારું FSSAI લાઇસન્સ મળી જાય પછી જ ચુકવણી કરો.",ctaApply:"અરજી કરો",ctaTrack:"અરજીની સ્થિતિ",s1:"દસ્તાવેજ અપલોડ કરો",s1d:"ફોર્મ ભરો અને ચોખ્ખા ફોટા કે PDF અપલોડ કરો.",s2:"અમે અરજી કરીએ",s2d:"દસ્તાવેજ તપાસીને FoSCoS પર અરજી કરીએ છીએ.",s3:"ચુકવણી અને લાઇસન્સ",s3d:"લાઇસન્સ તૈયાર થાય પછી જ ચુકવણી. WhatsApp પર મોકલીએ.",
 aTitle:"ફૂડ લાઇસન્સ માટે અરજી",aSub:"* વાળી વિગત ફરજિયાત છે.",lgDetails:"1. તમારી વિગત",fName:"માલિકનું નામ",fMobile:"મોબાઇલ નંબર (WhatsApp)",fShop:"દુકાન / ધંધાનું નામ",fCity:"શહેર / ગામ",fType:"ફૂડ ધંધાનો પ્રકાર",fLic:"કયું લાઇસન્સ",
 lgDocs:"2. દસ્તાવેજ અપલોડ કરો",docHelp:"\"ફોટો પાડો\" દબાવીને ફોનના કેમેરાથી ફોટો લો, અથવા \"અપલોડ\" દબાવીને ફોટો કે PDF પસંદ કરો (5 MB સુધી). ફોટાની સાઇઝ આપોઆપ નાની થશે.",required:"ફરજિયાત",optional:"વૈકલ્પિક",upload:"અપલોડ",change:"વધુ ઉમેરો",camera:"ફોટો પાડો",
 fMsg:"સંદેશ (વૈકલ્પિક)",agree:"હું ખાતરી આપું છું કે આ દસ્તાવેજ મારા છે અને Easy Food License ફક્ત મારી FSSAI અરજી માટે તેનો ઉપયોગ કરી શકે છે.",submit:"અરજી મોકલો",sending:"અપલોડ થઈ રહ્યું છે… આ પેજ ખુલ્લું રાખો",
@@ -424,7 +440,7 @@ sent:"ચુકવણી માટે આભાર, {name}. {shop} માટે�
 
 hi:{sub:"FSSAI फूड लाइसेंस मदद",h1:"घर बैठे FSSAI फूड लाइसेंस पाएँ",
 lead:"यहाँ अपने दस्तावेज़ अपलोड करें। हम सरकारी FoSCoS पोर्टल पर आवेदन करके फॉलो-अप करते हैं। लाइसेंस तैयार होने पर आप भुगतान करें और हम WhatsApp पर लाइसेंस भेजते हैं।",
-mTitle:"आवेदन मिल गया",mRefL:"आपका रेफरेंस नंबर",mMsg:"कृपया इसे नोट कर लें। लाइसेंस तैयार होने पर {mob} पर WhatsApp करेंगे।",mOk:"ठीक है",np1:"कोई एडवांस भुगतान नहीं",np2:"आपका FSSAI लाइसेंस जारी होने के बाद ही भुगतान करें।",ctaApply:"आवेदन करें",ctaTrack:"आवेदन की स्थिति",s1:"दस्तावेज़ अपलोड करें",s1d:"फॉर्म भरें और साफ़ फोटो या PDF अपलोड करें।",s2:"हम आवेदन करते हैं",s2d:"दस्तावेज़ जाँचकर FoSCoS पर आवेदन करते हैं।",s3:"भुगतान और लाइसेंस",s3d:"लाइसेंस तैयार होने पर ही भुगतान। WhatsApp पर भेजते हैं।",
+mTitle:"आवेदन मिल गया",mRefL:"आपका रेफरेंस नंबर",mMsg:"कृपया इसे नोट कर लें। लाइसेंस तैयार होने पर {mob} पर WhatsApp करेंगे।",mOk:"ठीक है",busy1:"कृपया प्रतीक्षा करें, आपका आवेदन प्रोसेस हो रहा है…",busy2:"यह पेज बंद या रिफ्रेश न करें।",busy3:"धीमे इंटरनेट पर दस्तावेज़ अपलोड होने में एक मिनट लग सकता है।",np1:"कोई एडवांस भुगतान नहीं",np2:"आपका FSSAI लाइसेंस जारी होने के बाद ही भुगतान करें।",ctaApply:"आवेदन करें",ctaTrack:"आवेदन की स्थिति",s1:"दस्तावेज़ अपलोड करें",s1d:"फॉर्म भरें और साफ़ फोटो या PDF अपलोड करें।",s2:"हम आवेदन करते हैं",s2d:"दस्तावेज़ जाँचकर FoSCoS पर आवेदन करते हैं।",s3:"भुगतान और लाइसेंस",s3d:"लाइसेंस तैयार होने पर ही भुगतान। WhatsApp पर भेजते हैं।",
 aTitle:"फूड लाइसेंस के लिए आवेदन",aSub:"* वाली जानकारी ज़रूरी है।",lgDetails:"1. आपकी जानकारी",fName:"मालिक का नाम",fMobile:"मोबाइल नंबर (WhatsApp)",fShop:"दुकान / व्यवसाय का नाम",fCity:"शहर / गाँव",fType:"खाद्य व्यवसाय का प्रकार",fLic:"कौन सा लाइसेंस",
 lgDocs:"2. दस्तावेज़ अपलोड करें",docHelp:"\"फोटो खींचें\" दबाकर फ़ोन के कैमरे से फोटो लें, या \"अपलोड\" दबाकर फोटो या PDF चुनें (5 MB तक)। फोटो का साइज़ अपने आप छोटा होगा।",required:"ज़रूरी",optional:"वैकल्पिक",upload:"अपलोड",change:"और जोड़ें",camera:"फोटो खींचें",
 fMsg:"संदेश (वैकल्पिक)",agree:"मैं पुष्टि करता/करती हूँ कि ये दस्तावेज़ मेरे हैं और Easy Food License इनका उपयोग केवल मेरे FSSAI आवेदन के लिए कर सकता है।",submit:"आवेदन भेजें",sending:"अपलोड हो रहा है… यह पेज खुला रखें",
@@ -582,7 +598,7 @@ $("#appForm").addEventListener("submit", async e => {
   const payload = { action:"submit", name, mobile, shop, city:$("#fCity").value.trim(),
     type: T.en.types[+$("#fType").value], licence: LIC_EN[+$("#fLic").value], message: $("#fMsg").value.trim(), lang, source: SOURCE, files };
 
-  btn.disabled = true; btn.textContent = t("sending");
+  btn.disabled = true; btn.textContent = t("sending"); showBusy();
   try{
     let ref, text;
     if (LIVE){ ref = (await api(payload)).ref; text = t("okSent"); }
@@ -595,13 +611,26 @@ $("#appForm").addEventListener("submit", async e => {
       store.set("efl-demo", all); text = t("okDemo");
     }
     ok.innerHTML = fill(text, { ref: esc(ref), mob: esc(mobile) }); ok.hidden = false;
-    showOkModal(ref, mobile);
+    hideBusy(); showOkModal(ref, mobile);
     $("#tRef").value = ref; $("#tMob").value = mobile;
     e.target.reset(); picked = {}; renderDocs();
     ok.scrollIntoView({ behavior:"smooth", block:"center" });
   }catch(x){ fail(fill(t("eNet"), {msg: x.message})); }
-  finally{ btn.disabled = false; btn.textContent = t("submit"); }
+  finally{ hideBusy(); btn.disabled = false; btn.textContent = t("submit"); }
 });
+
+/* ---------- processing dialog (current language + Hindi) ---------- */
+let busyTimer = null;
+function showBusy(){
+  const other = lang === "hi" ? "en" : "hi";
+  $("#busyMain").textContent = t("busy1") + " " + t("busy2");
+  $("#busyAlt").textContent = T[other].busy1 + " " + T[other].busy2;
+  $("#busyNote").textContent = "";
+  $("#busyModal").hidden = false;
+  clearTimeout(busyTimer);
+  busyTimer = setTimeout(() => { $("#busyNote").textContent = t("busy3"); }, 15000);
+}
+function hideBusy(){ clearTimeout(busyTimer); $("#busyModal").hidden = true; }
 
 /* ---------- success dialog ---------- */
 let lastFocus = null;
@@ -656,14 +685,14 @@ $("#trOut").addEventListener("submit", async e => {
   const err = $("#addErr"), ok = $("#addOk"), btn = $("#addBtn"); err.hidden = true; ok.hidden = true;
   const code = $("#addDoc").value, fl = [...$("#addFile").files, ...$("#addCam").files];
   if (!fl.length) return;
-  btn.disabled = true;
+  btn.disabled = true; showBusy();
   try{
     const files = [];
     for (const f of fl){ const p = await prepareFile(f); files.push({ code: DOCS[code].file, mime:p.mime, data:p.data }); }
     if (LIVE) await api({ action:"addDocs", ref:lastTrack.ref, mobile:lastTrack.mobile, files });
     ok.textContent = fill(t("addOk"), {n: files.length}); ok.hidden = false; $("#addFile").value = ""; $("#addCam").value = "";
   }catch(x){ err.textContent = x.message; err.hidden = false; }
-  finally{ btn.disabled = false; }
+  finally{ hideBusy(); btn.disabled = false; }
 });
 
 /* ---------- admin ---------- */
